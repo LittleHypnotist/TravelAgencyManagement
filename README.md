@@ -17,8 +17,6 @@ When you start the program, you will be presented with the Main Menu, where you 
 
 2.Customer Service
 
-3.Exit
-
 
 ## Manage Company Menu
 In this section, you can perform the following operations:
