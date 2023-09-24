@@ -102,12 +102,88 @@ void addEmployee() {
 
 void removeEmployee(){
 
+    int idToRemove;
+    printf("Enter the ID of the employee to remove: ");
+    scanf("%d", &idToRemove);
+
+    FILE *inputFile = fopen("employees.txt", "r");
+    FILE *tempFile = fopen("temp.txt", "w");
+
+    if (inputFile == NULL || tempFile == NULL) {
+        printf("Error opening files.\n");
+        return;
+    }
+
+    char line[100];
+    bool found = false;
+
+    while (fgets(line, sizeof(line), inputFile) != NULL) {
+        int id;
+        if (sscanf(line, "ID: %d", &id) == 1 && id == idToRemove) {
+            found = true;
+            for (int i = 0; i < 3; i++) {
+                fgets(line, sizeof(line), inputFile); // Skip name, status, and salary lines
+            }
+        } else {
+            fputs(line, tempFile);
+        }
+    }
+
+    fclose(inputFile);
+    fclose(tempFile);
+
+    if (!found) {
+        remove("temp.txt");
+        printf("Employee with ID %d not found.\n", idToRemove);
+        return;
+    }
+
+    remove("employees.txt");
+    rename("temp.txt", "employees.txt");
+
+    printf("Employee with ID %d removed successfully.\n", idToRemove);
 
 }
 
 // List employee function
 
 void listEmployee(){
+
+    char anyKey;
+
+    printf("The list of employees:\n");
+
+    FILE *file = fopen("employees.txt", "r");
+
+    if (file == NULL){
+        printf("Error opening files.\n\n");
+        return;
+    }
+
+    char line[100], name[50], status[50], salary[50];
+    int id;
+
+    while (fgets(line, sizeof(line), file)){
+
+        if (sscanf(line, "ID: %d", &id) == 1) {
+        
+        fgets(line, sizeof(line), file); 
+        sscanf(line, "Name: %49[^\n], ", name);
+        fgets(line, sizeof(line), file); 
+        sscanf(line, "Status: %49[^\n], ", status);
+        fgets(line, sizeof(line), file); 
+        sscanf(line, "Salary: %49[^\n]", salary);
+
+        
+        printf("ID: %d\nName: %s\nStatus: %s\nSalary: %s\n", id, name, status, salary);
+    }
+
+    }
+
+    fclose(file);
+
+    printf("Press any key to exit\n");
+    scanf(" %c", &anyKey);
 
 
 }
