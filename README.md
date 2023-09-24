@@ -5,8 +5,8 @@ This is a travel agency project implemented in the C language. The program allow
 ## Features
 
 - Add employee
-- Remove employee (Still in development)
-- List employees (Still in development)
+- Remove employee
+- List employees
 - Customer service (Still in development and thinking about interesting features)
 
 
