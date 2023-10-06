@@ -257,6 +257,57 @@ void addDestination() {
 }
 
 
+void removeDestination() {
+
+    int idToRemove;
+    printf(RED"You are about to delete a destination, be careful.\n"RESET);
+
+    FILE *file = fopen("destination.txt", "r");
+    FILE *tempFile = fopen("dest_temp.txt", "w");
+
+
+    printf("Enter the ID of the employee to remove: ");
+    scanf("%d", &idToRemove);
+    
+    
+    if (file == NULL || tempFile == NULL) {
+        printf("Error opening files.\n");
+        return;
+    }
+
+    char line[100];
+    bool found = false;
+    
+    while (fgets(line, sizeof(line), file) != NULL) {
+        int id;
+        if (sscanf(line, "ID: %d", &id) == 1 && id == idToRemove) {
+            found = true;
+            for (int i = 0; i < 2; i++) {
+                fgets(line, sizeof(line), file); 
+            }
+        } else {
+            fputs(line, tempFile);
+        }
+    }
+
+    fclose(file);
+    fclose(tempFile);
+
+    if (!found) {
+        remove("dest_temp.txt");
+        printf("Destination with ID %d not found.\n", idToRemove);
+        return;
+    }
+
+    remove("destination.txt");
+    rename("dest_temp.txt", "destination.txt");
+
+    printf("Destination with ID %d removed successfully.\n", idToRemove);
+
+
+}
+
+
 void listDestination() {
 
     char anyKey;
@@ -348,6 +399,12 @@ int main(void)
                 {
                     addDestination();
                 }
+
+                else if (opt_emp == 5)
+                {
+                    removeDestination();
+                }
+                
 
                 else if (opt_emp == 6)
                 {
