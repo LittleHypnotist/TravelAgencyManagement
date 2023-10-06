@@ -26,10 +26,19 @@ typedef struct {
     char email[50];
 } Customer;
 
+typedef struct 
+{
+    int id;
+    char name[50];
+    char description[200];
+} Destination;
+
+
 int lastEmployeedID;
+int lastDestinationID;
 
 // Fetch the last ID
-void fetchID() {
+void fetchIdEmployee() {
     FILE *file = fopen("employees.txt", "r");
 
     if (file == NULL){
@@ -56,10 +65,37 @@ void fetchID() {
 
 }
 
+void fetchIdDestination() {
+    FILE *file = fopen("destination.txt", "r");
+
+    if (file == NULL){
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    int maxID = 0;
+    char line[100];
+
+    while (fgets(line, sizeof(line), file) != NULL){
+        if (strstr(line, "ID:") != NULL){
+            int ID;
+            sscanf(line, "ID: %d", &ID);
+            if (ID > maxID){
+                maxID = ID;
+            }
+        }
+    }
+
+    fclose(file);
+
+    lastDestinationID = maxID;    
+
+}
+
 // Add employee function
 void addEmployee() {
 
-    fetchID();
+    fetchIdEmployee();
 
     Employee newEmployee;  
 
@@ -188,6 +224,81 @@ void listEmployee(){
 
 }
 
+//Add destination function
+void addDestination() {
+
+    fetchIdDestination();
+
+    Destination newDestination;  
+    newDestination.id = lastDestinationID + 1;
+
+    printf("Name: ");
+    fgets(newDestination.name, 50, stdin);
+    newDestination.name[strcspn(newDestination.name, "\n")] = 0;
+
+    printf("Description: ");
+    fgets(newDestination.description, 200, stdin);
+    newDestination.description[strcspn(newDestination.description, "\n")] = 0;
+
+    FILE *file = fopen("destination.txt", "a");
+
+    if (file == NULL) {
+        perror("Error opening destination.txt");
+        return;
+    }
+
+    fprintf(file, "ID: %d\n", newDestination.id);
+    fprintf(file, "Name: %s\n", newDestination.name);
+    fprintf(file, "Description: %s\n", newDestination.description);
+
+    fclose(file);
+
+    printf("New destination successfully added!\n");
+}
+
+
+void listDestination() {
+
+    char anyKey;
+
+    printf("This is the list of destinations:\n");
+
+    FILE *file = fopen("destination.txt", "r");
+
+    if (file == NULL){
+        printf("Error opening files.\n\n");
+        return;
+    }
+
+    char line[100], name[50], description[200];
+    int id;
+
+    while (fgets(line, sizeof(line), file)){
+
+        if (sscanf(line, "ID: %d", &id) == 1) {
+        
+        fgets(line, sizeof(line), file); 
+        sscanf(line, "Name: %49[^\n], ", name);
+        fgets(line, sizeof(line), file); 
+        sscanf(line, "Description: %49[^\n], ", description);
+        fgets(line, sizeof(line), file); 
+        
+
+        
+        printf("ID: %d\nName: %s\nDescription: %s\n", id, name, description);
+    }
+
+    }
+
+
+
+    fclose(file);
+
+    printf("Press any key to exit\n");
+    scanf(" %c", &anyKey);
+}
+
+
 
 int main(void)
 {
@@ -212,9 +323,9 @@ int main(void)
                 printf("1 - Add employee\n");
                 printf("2 - Remove employee\n");
                 printf("3 - List employees\n");
-                printf("4 - Add destinations");
-                printf("4 - Remove destinations");
-                printf("4 - List destinations");
+                printf("4 - Add destinations\n");
+                printf("5 - Remove destinations\n");
+                printf("6 - List destinations\n");
                 printf("0 - Exit\n");
                 printf("Select an option: ");
                 scanf("%d", &opt_emp);
@@ -233,6 +344,17 @@ int main(void)
                     listEmployee();
                 }
 
+                else if (opt_emp == 4)
+                {
+                    addDestination();
+                }
+
+                else if (opt_emp == 6)
+                {
+                    listDestination();
+                }
+                
+                
                 else if (opt_emp == 0) {
                     break;
                 }
