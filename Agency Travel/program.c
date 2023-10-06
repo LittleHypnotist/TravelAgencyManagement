@@ -192,7 +192,8 @@ void listEmployee(){
 int main(void)
 {
     int opt;
-    int opt_emp;    
+    int opt_emp;
+    int opt_cust;    
 
     while (1)
     {
@@ -207,10 +208,13 @@ int main(void)
         if (opt == 1) {
             while (1) {
 
-                printf(CYAN"\n-------Employee Menu-------\n\n"RESET);
+                printf(CYAN"\n----Manage Company Menu----\n\n"RESET);
                 printf("1 - Add employee\n");
                 printf("2 - Remove employee\n");
                 printf("3 - List employees\n");
+                printf("4 - Add destinations");
+                printf("4 - Remove destinations");
+                printf("4 - List destinations");
                 printf("0 - Exit\n");
                 printf("Select an option: ");
                 scanf("%d", &opt_emp);
@@ -241,7 +245,24 @@ int main(void)
         }
 
         else if (opt == 2){
-            printf("Option Customer service.\n");
+            while (2)
+            {
+                printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
+                printf("1 - Check Available Trips\n");
+                printf("2 - Make a reservation\n");
+                printf("3 - Cancel reservations\n");
+                printf("0 - Exit\n");
+                printf("Select an option: ");
+                scanf("%d", &opt_cust);
+                getchar();
+
+                if (opt_cust == 1)
+                {
+                    
+                }
+                
+            }
+            
         }
 
         else if (opt == 0){
