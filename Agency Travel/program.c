@@ -13,31 +13,37 @@
 #define CYAN    "\x1b[36m"
 #define RESET   "\x1b[0m"
 
+//Structure for employee
 typedef struct {
     int id;
     char name[50];
     char status[50];
     char salary[50];
+    int role;
 } Employee;
 
+//Structure for customer
 typedef struct {
     int id;
     char name[50];
     char email[50];
+    int role;
 } Customer;
 
+//Structure for destination
 typedef struct 
 {
     int id;
     char name[50];
     char description[200];
+    int quantity;
 } Destination;
 
 
 int lastEmployeedID;
 int lastDestinationID;
 
-// Fetch the last ID
+//Fetch the last ID of employee
 void fetchIdEmployee() {
     FILE *file = fopen("employees.txt", "r");
 
@@ -65,6 +71,7 @@ void fetchIdEmployee() {
 
 }
 
+//Fetch the last ID of destination
 void fetchIdDestination() {
     FILE *file = fopen("destination.txt", "r");
 
@@ -134,8 +141,7 @@ void addEmployee() {
 
 }
 
-// Remove employee function
-
+//Remove employee function
 void removeEmployee(){
 
     int idToRemove;
@@ -181,8 +187,7 @@ void removeEmployee(){
 
 }
 
-// List employee function
-
+//List employee function
 void listEmployee(){
 
     char anyKey;
@@ -256,7 +261,7 @@ void addDestination() {
     printf("New destination successfully added!\n");
 }
 
-
+//Remove destination function
 void removeDestination() {
 
     int idToRemove;
@@ -307,13 +312,15 @@ void removeDestination() {
 
 }
 
-
+//List destination function
 void listDestination() {
 
+    //variable to exit from the list
     char anyKey;
 
     printf("This is the list of destinations:\n");
 
+    //open the file
     FILE *file = fopen("destination.txt", "r");
 
     if (file == NULL){
@@ -341,8 +348,6 @@ void listDestination() {
 
     }
 
-
-
     fclose(file);
 
     printf("Press any key to exit\n");
@@ -353,6 +358,7 @@ void listDestination() {
 
 int main(void)
 {
+    //variables thath are use to choose the options
     int opt;
     int opt_emp;
     int opt_cust;    
@@ -367,6 +373,7 @@ int main(void)
         scanf("%d", &opt);        
         getchar();
 
+        //To select the option Manage Company
         if (opt == 1) {
             while (1) {
 
@@ -382,6 +389,7 @@ int main(void)
                 scanf("%d", &opt_emp);
                 getchar();
 
+                //To select the option from Manage Company
                 if (opt_emp == 1){
                     
                     addEmployee();
@@ -423,6 +431,7 @@ int main(void)
             }
         }
 
+        //To select the option Custumer Service
         else if (opt == 2){
             while (2)
             {
@@ -435,6 +444,7 @@ int main(void)
                 scanf("%d", &opt_cust);
                 getchar();
 
+                //To select the option from Custumer Service
                 if (opt_cust == 1)
                 {
                     
