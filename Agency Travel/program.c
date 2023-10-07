@@ -404,6 +404,65 @@ void availableDestination() {
 
 }
 
+//Function to make a reservation
+void makeReservation () {
+
+    int idToReserve;
+
+    printf("Enter the ID of the destinationto reserve: \n");
+    scanf("%d", &idToReserve);
+
+    FILE *file = fopen("destination.txt", "r");
+    FILE *tempFile = fopen("dest_temp.txt", "w");
+
+    if (file == NULL || tempFile == NULL){
+        printf("Error opening the file.\n");
+        return;
+    }
+    
+    char line[100];
+    bool found = false;
+
+    while (fgets(line, sizeof(line), file) !=NULL)
+    {
+       int id;
+        if (sscanf(line, "ID: %d", &id) == 1 && id == idToReserve) {
+            found = true;
+            int quantity;
+            sscanf(line, "Quantity: %d", &quantity);
+            if (quantity >= 1) {
+                quantity--;
+                fprintf(tempFile, "ID: %d\n", id);
+                fprintf(tempFile, "Name: ");
+                fgets(line, sizeof(line), file);
+                fprintf(tempFile, "%s", line);
+                fprintf(tempFile, "Description: ");
+                fgets(line, sizeof(line), file);
+                fprintf(tempFile, "%s", line);
+                fprintf(tempFile, "Quantity: %d\n", quantity);
+            } else {
+                printf("No available quantity for this destination.\n");
+            }
+        } else {
+            fputs(line, tempFile);
+        } 
+    }
+
+    fclose(file);
+    fclose(tempFile);
+
+    if (!found) {
+        remove("dest_temp.txt");
+        printf("Destination with ID %d not found.\n", idToReserve);
+        return;
+    }
+
+    remove("destination.txt");
+    rename("dest_temp.txt", "destination.txt");
+
+    printf("Reservation for destination with ID %d made successfully.\n", idToReserve);
+}   
+
 
 
 int main(void)
@@ -499,6 +558,18 @@ int main(void)
                 {
                     availableDestination();
                 }
+
+                else if (opt_cust == 2)
+                {
+                    makeReservation();
+                }
+
+                else if (opt_cust == 3)
+                {
+                    cancelReservation();
+                }
+                
+                
                 
             }
             
