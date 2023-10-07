@@ -36,7 +36,7 @@ typedef struct
     int id;
     char name[50];
     char description[200];
-    int quantity;
+    char quantity[100];
 } Destination;
 
 
@@ -245,16 +245,21 @@ void addDestination() {
     fgets(newDestination.description, 200, stdin);
     newDestination.description[strcspn(newDestination.description, "\n")] = 0;
 
+    printf("Quantity: ");
+    fgets(newDestination.quantity, 50, stdin);
+    newDestination.quantity[strcspn(newDestination.quantity, "\n")] = 0;
+
     FILE *file = fopen("destination.txt", "a");
 
     if (file == NULL) {
-        perror("Error opening destination.txt");
+        printf ("Error opening the file.\n");
         return;
     }
 
     fprintf(file, "ID: %d\n", newDestination.id);
     fprintf(file, "Name: %s\n", newDestination.name);
     fprintf(file, "Description: %s\n", newDestination.description);
+    fprintf(file, "Quantity: %s\n", newDestination.quantity);
 
     fclose(file);
 
@@ -354,6 +359,51 @@ void listDestination() {
     scanf(" %c", &anyKey);
 }
 
+//Function that show available destination
+void availableDestination() {
+
+    char keyToExit;
+
+    //Open the file we want
+    FILE *file = fopen("destination.txt", "r");
+
+    //Check if the file exists
+    if (file == NULL)
+    {
+        printf("Error opening files.\n\n");
+        return;
+    }
+
+    char line[100], name[50], description[200], quantity[100];
+    int id;
+
+    while (fgets(line, sizeof(line), file)) {
+
+        if (sscanf(line, "ID: %d", &id) == 1) {
+
+            fgets(line, sizeof(line), file);
+            sscanf(line, "Name: %49[^\n], ", name);
+            fgets(line, sizeof(line), file);
+            sscanf(line, "Description: %199[^\n], ", description);
+            fgets(line, sizeof(line), file);
+            sscanf(line, "Quantity: %99[^\n]", quantity);
+
+            
+            //Just shows the destination with quantity plus or equal one
+            if (quantity[0] >= '1') {
+                printf("ID: %d\nName: %s\nDescription: %s\nQuantity: %d\n", id, name, description, quantity);
+            }
+        }
+
+    }
+
+    fclose(file);
+
+    printf("Press any key to exit\n");
+    scanf(" %c", &keyToExit);
+
+}
+
 
 
 int main(void)
@@ -436,7 +486,7 @@ int main(void)
             while (2)
             {
                 printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
-                printf("1 - Check Available Trips\n");
+                printf("1 - Check available destination\n");
                 printf("2 - Make a reservation\n");
                 printf("3 - Cancel reservations\n");
                 printf("0 - Exit\n");
@@ -447,7 +497,7 @@ int main(void)
                 //To select the option from Custumer Service
                 if (opt_cust == 1)
                 {
-                    
+                    availableDestination();
                 }
                 
             }
