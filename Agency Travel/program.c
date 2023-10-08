@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <conio.h>
 
+//Some colors to use
 #define RED     "\x1b[31m"
 #define GREEN   "\x1b[32m"
 #define YELLOW  "\x1b[33m"
@@ -391,7 +392,10 @@ void availableDestination() {
             
             //Just shows the destination with quantity plus or equal one
             if (quantity[0] >= '1') {
-                printf("ID: %d\nName: %s\nDescription: %s\nQuantity: %d\n", id, name, description, quantity);
+                printf("ID: %d\nName: %s\nDescription: %s\nQuantity: %s\n", id, name, description, quantity);
+            }
+            else {
+                printf("In this moment there not exists destinations available.\n");
             }
         }
 
@@ -467,7 +471,7 @@ void makeReservation () {
 
 int main(void)
 {
-    //variables thath are use to choose the options
+    //variables that are use to choose the options
     int opt;
     int opt_emp;
     int opt_cust;    
@@ -566,7 +570,8 @@ int main(void)
 
                 else if (opt_cust == 3)
                 {
-                    cancelReservation();
+                    // Ainda falta fazer esta
+                    //cancelReservation();
                 }
                 
                 
