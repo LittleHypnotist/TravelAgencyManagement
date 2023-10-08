@@ -41,6 +41,37 @@ typedef struct
 } Destination;
 
 
+typedef struct 
+{
+    int id; 
+    char name[50];
+    char password[15];
+    int role;
+    
+} Administrator;
+
+int authenticateUser(char *username, char *password) {
+    FILE *file = fopen("users.txt", "r");
+    if (!file) {
+        printf("Error opening the file.\n");
+        return 0;
+    }
+
+    int id, role;
+    char name[50], salary[50], pass[15];
+
+    while (fscanf(file, "%d,%49[^,],%49[^,],%14[^,],%d\n", &id, name, salary, pass, &role) == 5) {
+        if (strcmp(name, username) == 0 && strcmp(pass, password) == 0) {
+            fclose(file);
+            return role;
+        }
+    }
+
+    fclose(file);
+    return 0; 
+}
+
+
 int lastEmployeedID;
 int lastDestinationID;
 
@@ -474,121 +505,133 @@ int main(void)
     //variables that are use to choose the options
     int opt;
     int opt_emp;
-    int opt_cust;    
+    int opt_cust;   
+    int role;
 
     while (1)
     {
-        printf(CYAN"\n-------Home Menu-------\n\n"RESET);
-        printf(GREEN"1 - Manage Company\n"RESET);
-        printf(GREEN"2 - Customer service\n"RESET);
-        printf(RED"\n0 - Exit\n"RESET);
-        printf(YELLOW"Select an option: \n"RESET);
-        scanf("%d", &opt);        
-        getchar();
+        role = authenticateUser;
 
-        //To select the option Manage Company
-        if (opt == 1) {
-            while (1) {
+        if (role == 0){
+            printf(RED"Authentication failed. Please try again.\n"RESET);
+            continue;
 
-                printf(CYAN"\n----Manage Company Menu----\n\n"RESET);
-                printf("1 - Add employee\n");
-                printf("2 - Remove employee\n");
-                printf("3 - List employees\n");
-                printf("4 - Add destinations\n");
-                printf("5 - Remove destinations\n");
-                printf("6 - List destinations\n");
-                printf("0 - Exit\n");
-                printf("Select an option: ");
-                scanf("%d", &opt_emp);
-                getchar();
+        }
+        
 
-                //To select the option from Manage Company
-                if (opt_emp == 1){
+        while (1)
+        {
+            printf(CYAN"\n-------Home Menu-------\n\n"RESET);
+            printf(GREEN"1 - Manage Company\n"RESET);
+            printf(GREEN"2 - Customer service\n"RESET);
+            printf(RED"\n0 - Exit\n"RESET);
+            printf(YELLOW"Select an option: \n"RESET);
+            scanf("%d", &opt);        
+            getchar();
+
+            //To select the option Manage Company
+            if (opt == 1) {
+                while (1) {
+
+                    printf(CYAN"\n----Manage Company Menu----\n\n"RESET);
+                    printf("1 - Add employee\n");
+                    printf("2 - Remove employee\n");
+                    printf("3 - List employees\n");
+                    printf("4 - Add destinations\n");
+                    printf("5 - Remove destinations\n");
+                    printf("6 - List destinations\n");
+                    printf("0 - Exit\n");
+                    printf("Select an option: ");
+                    scanf("%d", &opt_emp);
+                    getchar();
+
+                    //To select the option from Manage Company
+                    if (opt_emp == 1){
+                        
+                        addEmployee();
+                    }
+
+                    else if (opt_emp == 2){
+                        removeEmployee();
+                    }
+
+                    else if (opt_emp == 3){
+                        listEmployee();
+                    }
+
+                    else if (opt_emp == 4)
+                    {
+                        addDestination();
+                    }
+
+                    else if (opt_emp == 5)
+                    {
+                        removeDestination();
+                    }
                     
-                    addEmployee();
-                }
 
-                else if (opt_emp == 2){
-                    removeEmployee();
-                }
+                    else if (opt_emp == 6)
+                    {
+                        listDestination();
+                    }
+                    
+                    
+                    else if (opt_emp == 0) {
+                        break;
+                    }
 
-                else if (opt_emp == 3){
-                    listEmployee();
-                }
+                    else {
+                        printf("Invalid option. Please try again.\n");
+                    }
 
-                else if (opt_emp == 4)
-                {
-                    addDestination();
                 }
-
-                else if (opt_emp == 5)
-                {
-                    removeDestination();
-                }
-                
-
-                else if (opt_emp == 6)
-                {
-                    listDestination();
-                }
-                
-                
-                else if (opt_emp == 0) {
-                    break;
-                }
-
-                else {
-                    printf("Invalid option. Please try again.\n");
-                }
-
             }
-        }
 
-        //To select the option Custumer Service
-        else if (opt == 2){
-            while (2)
-            {
-                printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
-                printf("1 - Check available destination\n");
-                printf("2 - Make a reservation\n");
-                printf("3 - Cancel reservations\n");
-                printf("0 - Exit\n");
-                printf("Select an option: ");
-                scanf("%d", &opt_cust);
-                getchar();
-
-                //To select the option from Custumer Service
-                if (opt_cust == 1)
+            //To select the option Custumer Service
+            else if (opt == 2){
+                while (2)
                 {
-                    availableDestination();
-                }
+                    printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
+                    printf("1 - Check available destination\n");
+                    printf("2 - Make a reservation\n");
+                    printf("3 - Cancel reservations\n");
+                    printf("0 - Exit\n");
+                    printf("Select an option: ");
+                    scanf("%d", &opt_cust);
+                    getchar();
 
-                else if (opt_cust == 2)
-                {
-                    makeReservation();
-                }
+                    //To select the option from Custumer Service
+                    if (opt_cust == 1)
+                    {
+                        availableDestination();
+                    }
 
-                else if (opt_cust == 3)
-                {
-                    // Ainda falta fazer esta
-                    //cancelReservation();
+                    else if (opt_cust == 2)
+                    {
+                        makeReservation();
+                    }
+
+                    else if (opt_cust == 3)
+                    {
+                        // Ainda falta fazer esta
+                        //cancelReservation();
+                    }
+                    
+                    
+                    
                 }
-                
-                
                 
             }
-            
-        }
 
-        else if (opt == 0){
-            break;
-        }
+            else if (opt == 0){
+                break;
+            }
 
-        else {
-            printf("Invalid option. Please try again.\n");
-        }
+            else {
+                printf("Invalid option. Please try again.\n");
+            }
 
+        }
     }
-    
     
 }
