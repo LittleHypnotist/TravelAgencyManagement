@@ -4,10 +4,16 @@ This is a travel agency project implemented in the C language. The program allow
 
 ## Features
 
+- Login (There are 3 types of users, the administrator (who has permissions for everything, the customer who only has access to part of the customers and the employee who has access to the add, remove and list destinations part))
 - Add employee
 - Remove employee
 - List employees
-- Customer service (Still in development and thinking about interesting features)
+- Add destinations
+- Remove destinations
+- List destinations
+- Check available destinations
+- Make reservations
+- Cancel reservations
 
 
 ## The program's Main Menu
