@@ -54,7 +54,6 @@ typedef struct
 } Administrator;
 
 int authenticateAdministrator(char *username, char *password) {
-
     FILE *file = fopen("administrator.txt", "r");
 
     if (!file) {
@@ -63,17 +62,31 @@ int authenticateAdministrator(char *username, char *password) {
     }
 
     int id, role;
-    char name[50], salary[50], pass[15];
+    char name[50], pass[15];
+    int authenticated = 0;
 
-    while (fscanf(file, "%d,%49[^,],%14[^,],%d\n", &id, name, pass, &role) == 5) {
-        if (strcmp(name, username) == 0 && strcmp(pass, password) == 0) {
-            fclose(file);
-            return role;
+    while (!authenticated) {
+        printf("Enter the name for administrator:\n");
+        scanf("%49s", username);
+
+        printf("Enter the password for administrator:\n");
+        scanf("%14s", password);
+
+        while (fscanf(file, "ID: %d\nName: %49[^\n]\nPassword: %14[^\n]\nRole: %d\n", &id, name, pass, &role) == 4) {
+            if (strcmp(name, username) == 0 && strcmp(pass, password) == 0) {
+                authenticated = 1;
+                break;
+            }
+        }
+
+        if (!authenticated) {
+            printf("Invalid username or password. Please try again.\n");
+            fseek(file, 0, SEEK_SET);  
         }
     }
 
     fclose(file);
-    return 0; 
+    return role; 
 }
 
 
@@ -535,6 +548,8 @@ void createAdministrator () {
 
     printf(RED"Administrator was created.\n"RESET);
 
+    
+
 }
 
 int main(void)
@@ -550,18 +565,42 @@ int main(void)
     if(file == NULL){
         createAdministrator();
     }
+
+    else{
+        int opt_login;
+
+        printf("Login as: \n");
+        printf("1 - Admnistrator\n");
+        printf("2 - Employee\n");
+        printf("3 - Custumer\n");
+        scanf("%d", &opt_login);
+
+        if (opt_login == 1)
+        {
+            char username[50];
+            char password[15];
+
+            
+            authenticateAdministrator(username, password);
+        }
+
+        else if (opt_login == 2)
+        {
+            /* code */
+        }
+
+        else if (opt_login == 3)
+        {
+            /* code */
+        }
+                
+        
+    }
     
 
     while (1)
     {
-        role = authenticateAdministrator;
-
-        if (role == 0){
-            printf(RED"Authentication failed. Please try again.\n"RESET);
-            continue;
-
-        }
-        
+              
 
         while (1)
         {
@@ -633,7 +672,7 @@ int main(void)
 
             //To select the option Custumer Service
             else if (opt == 2){
-                while (2)
+                while (1)
                 {
                     printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
                     printf("1 - Check available destination\n");
