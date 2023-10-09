@@ -16,7 +16,7 @@ This is a travel agency project implemented in the C language. The program allow
 - Cancel reservations
 
 
-## The program's Main Menu
+## The program's Menu
 When you start the program, you will be presented with the Main Menu, where you can choose between the options:
 
 1.Manage Company
@@ -49,7 +49,25 @@ This option will display a list of all the employees registered with the agency,
 
 ## Customer Service Menu
 
-This section is still under development.
+1. Check available destinations
+   
+2. Make reservations
+ 
+3. Cancel reservations
+   
+
+- Check available destinations
+
+You can see which destinations have a quantity greater than 1.
+
+- Make reservation
+
+It is possible for the custumer to choose which trip they want and book.
+  
+- Cancel reservation
+
+Cancel the reservation made in the previous option.
+  
 
 ## Contributing
 
