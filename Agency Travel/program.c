@@ -18,17 +18,19 @@
 typedef struct {
     int id;
     char name[50];
-    char status[50];
+    char password[50];
     char salary[50];
     int role;
+
 } Employee;
 
 //Structure for customer
 typedef struct {
     int id;
     char name[50];
-    char email[50];
+    char password[50];
     int role;
+
 } Customer;
 
 //Structure for destination
@@ -38,6 +40,7 @@ typedef struct
     char name[50];
     char description[200];
     char quantity[100];
+
 } Destination;
 
 
@@ -50,8 +53,10 @@ typedef struct
     
 } Administrator;
 
-int authenticateUser(char *username, char *password) {
-    FILE *file = fopen("users.txt", "r");
+int authenticateAdministrator(char *username, char *password) {
+
+    FILE *file = fopen("administrator.txt", "r");
+
     if (!file) {
         printf("Error opening the file.\n");
         return 0;
@@ -60,7 +65,7 @@ int authenticateUser(char *username, char *password) {
     int id, role;
     char name[50], salary[50], pass[15];
 
-    while (fscanf(file, "%d,%49[^,],%49[^,],%14[^,],%d\n", &id, name, salary, pass, &role) == 5) {
+    while (fscanf(file, "%d,%49[^,],%14[^,],%d\n", &id, name, pass, &role) == 5) {
         if (strcmp(name, username) == 0 && strcmp(pass, password) == 0) {
             fclose(file);
             return role;
@@ -145,10 +150,10 @@ void addEmployee() {
     fgets(newEmployee.name, 50, stdin);
     newEmployee.name[strcspn(newEmployee.name, "\n")] = 0;
 
-    printf("Status: ");
+    printf("Password: ");
     // fflush(stdin);
-    fgets(newEmployee.status, 50, stdin);
-    newEmployee.status[strcspn(newEmployee.status, "\n")] = 0;
+    fgets(newEmployee.password, 50, stdin);
+    newEmployee.password[strcspn(newEmployee.password, "\n")] = 0;
 
     printf("Salary: ");
     //fflush(stdin);
@@ -164,7 +169,7 @@ void addEmployee() {
 
     fprintf(file, "ID: %d\n", newEmployee.id);
     fprintf(file, "Name: %s\n", newEmployee.name);
-    fprintf(file, "Status: %s\n", newEmployee.status);
+    fprintf(file, "Password: %s\n", newEmployee.password);
     fprintf(file, "Salary: %s\n", newEmployee.salary);    
 
     fclose(file);
@@ -267,6 +272,8 @@ void addDestination() {
     fetchIdDestination();
 
     Destination newDestination;  
+
+
     newDestination.id = lastDestinationID + 1;
 
     printf("Name: ");
@@ -498,7 +505,37 @@ void makeReservation () {
     printf("Reservation for destination with ID %d made successfully.\n", idToReserve);
 }   
 
+//Create administrator
 
+void createAdministrator () {
+
+    Administrator newAdmnistrator;
+
+    newAdmnistrator.id = 1;
+    newAdmnistrator.role = 1;
+
+    printf(RED"There is no Admnistrator on the system, we need to create one.\n"RESET);
+
+    printf("Name of administrator: \n");
+    fgets(newAdmnistrator.name, 50, stdin);
+    newAdmnistrator.name[strcspn(newAdmnistrator.name, "\n")] = 0;
+    
+    printf("Password of administrator: \n");
+    fgets(newAdmnistrator.password, 15, stdin);
+    newAdmnistrator.password[strcspn(newAdmnistrator.password, "\n")] = 0;
+
+    FILE *file = fopen("administrator.txt", "a");
+
+    fprintf(file, "ID: %d\n", newAdmnistrator.id);
+    fprintf(file, "Name: %s\n", newAdmnistrator.name);
+    fprintf(file, "Password: %s\n", newAdmnistrator.password);
+    fprintf(file, "Role: %d\n", newAdmnistrator.role);
+
+    fclose(file);
+
+    printf(RED"Administrator was created.\n"RESET);
+
+}
 
 int main(void)
 {
@@ -508,9 +545,16 @@ int main(void)
     int opt_cust;   
     int role;
 
+    FILE *file = fopen("administrator.txt", "r");
+
+    if(file == NULL){
+        createAdministrator();
+    }
+    
+
     while (1)
     {
-        role = authenticateUser;
+        role = authenticateAdministrator;
 
         if (role == 0){
             printf(RED"Authentication failed. Please try again.\n"RESET);
