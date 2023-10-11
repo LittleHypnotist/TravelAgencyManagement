@@ -54,6 +54,7 @@ typedef struct
 } Administrator;
 
 int authenticateAdministrator(char *username, char *password) {
+
     FILE *file = fopen("administrator.txt", "r");
 
     if (!file) {
@@ -87,6 +88,50 @@ int authenticateAdministrator(char *username, char *password) {
 
     fclose(file);
     return role; 
+}
+
+int authenticateEmployee(char *username, char *password){
+
+    FILE *file = fopen("employees.txt", "r");
+
+    if(!file){
+        printf("Error opening the file.\n");
+        return 0;
+    }
+
+    int id, role;
+    char name[50], pass[15], salary[50];
+
+    int authenticated = 0;
+
+    while (!authenticated){
+        printf("Enter the name for employee:\n");
+        scanf("%49s", username);
+
+        printf("Enter the password for employee:\n");
+        printf("%14s", password);
+
+        while (fscanf(file, "ID: %d\nName: %49[^\n]\nPassword: %14[^\n]\nSalary: %49[^\n]\nRole: %d\n", &id, name, pass, salary, &role) == 5)
+        {
+            if(strcmp(name, username) == 0 && strcmp(pass, password) == 0)
+            {
+                authenticated = 1;
+                break;
+            }
+        }
+
+        if (!authenticated)
+        {
+            printf("Invalid username or password. Please try again.\n");
+            fseek(file, 0, SEEK_SET);
+        }
+        
+        fclose(file);
+        return role;
+        
+    }
+
+
 }
 
 
@@ -586,7 +631,10 @@ int main(void)
 
         else if (opt_login == 2)
         {
-            /* code */
+            char username[50];
+            char password[15];
+
+            authenticateEmployee(username, password);
         }
 
         else if (opt_login == 3)
