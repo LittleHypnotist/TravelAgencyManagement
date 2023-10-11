@@ -111,7 +111,7 @@ int authenticateEmployee(char *username, char *password){
         printf("Enter the password for employee:\n");
         scanf("%14s", password);
 
-        while (fscanf(file, "ID: %d\nName: %49[^\n]\nPassword: %14[^\n]\nSalary: %49[^\n]\nRole: %d\n", &id, name, pass, salary, &role) == 5)
+        while (fscanf(file, "ID: %d\nName: %49[^\n]\nPassword: %14[^\n]\nRole: %d\nSalary: %49[^\n]\n", &id, name, pass, &role, salary) == 5)
         {
             if(strcmp(name, username) == 0 && strcmp(pass, password) == 0)
             {
@@ -125,11 +125,12 @@ int authenticateEmployee(char *username, char *password){
             printf("Invalid username or password. Please try again.\n");
             fseek(file, 0, SEEK_SET);
         }
-        
-        fclose(file);
-        return role;
-        
+                      
     }
+
+
+    fclose(file);
+    return role;
 
 
 }
@@ -202,6 +203,7 @@ void addEmployee() {
     Employee newEmployee;  
 
     newEmployee.id = lastEmployeedID + 1;
+    newEmployee.role = 2;
 
     printf("Name: ");
     // fflush(stdin);
@@ -228,7 +230,9 @@ void addEmployee() {
     fprintf(file, "ID: %d\n", newEmployee.id);
     fprintf(file, "Name: %s\n", newEmployee.name);
     fprintf(file, "Password: %s\n", newEmployee.password);
-    fprintf(file, "Salary: %s\n", newEmployee.salary);    
+    fprintf(file, "Role: %d\n",newEmployee.role);
+    fprintf(file, "Salary: %s\n", newEmployee.salary); 
+       
 
     fclose(file);
 
@@ -633,6 +637,7 @@ int main(void)
         {
             char username[50];
             char password[15];
+            
 
             authenticateEmployee(username, password);
         }
@@ -649,7 +654,6 @@ int main(void)
     while (1)
     {
               
-
         while (1)
         {
             printf(CYAN"\n-------Home Menu-------\n\n"RESET);
