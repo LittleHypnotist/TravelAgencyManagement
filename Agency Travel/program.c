@@ -109,7 +109,7 @@ int authenticateEmployee(char *username, char *password){
         scanf("%49s", username);
 
         printf("Enter the password for employee:\n");
-        printf("%14s", password);
+        scanf("%14s", password);
 
         while (fscanf(file, "ID: %d\nName: %49[^\n]\nPassword: %14[^\n]\nSalary: %49[^\n]\nRole: %d\n", &id, name, pass, salary, &role) == 5)
         {
