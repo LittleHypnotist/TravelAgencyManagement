@@ -28,8 +28,10 @@ typedef struct {
 typedef struct {
     int id;
     char name[50];
-    char password[50];
+    char password[50];    
     int role;
+    int bookedTripIDs[15];
+    int numBookedTrips;
 
 } Customer;
 
@@ -52,6 +54,66 @@ typedef struct
     int role;
     
 } Administrator;
+
+
+int lastEmployeedID;
+int lastDestinationID;
+
+//Fetch the last ID of employee
+void fetchIdEmployee() {
+    FILE *file = fopen("employees.txt", "r");
+
+    if (file == NULL){
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    int maxID = 0;
+    char line[100];
+
+    while (fgets(line, sizeof(line), file) != NULL){
+        if (strstr(line, "ID:") != NULL){
+            int ID;
+            sscanf(line, "ID: %d", &ID);
+            if (ID > maxID){
+                maxID = ID;
+            }
+        }
+    }
+
+    fclose(file);
+
+    lastEmployeedID = maxID;    
+
+}
+
+//Fetch the last ID of destination
+void fetchIdDestination() {
+    FILE *file = fopen("destination.txt", "r");
+
+    if (file == NULL){
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    int maxID = 0;
+    char line[100];
+  
+    while (fgets(line, sizeof(line), file) != NULL){
+        if (strstr(line, "ID:") != NULL){
+            int ID;
+            sscanf(line, "ID: %d", &ID);
+            if (ID > maxID){
+                maxID = ID;
+            }
+        }
+    }
+
+    fclose(file);
+
+    lastDestinationID = maxID;    
+
+}
 
 int authenticateAdministrator(char *username, char *password) {
 
@@ -128,75 +190,59 @@ int authenticateEmployee(char *username, char *password){
                       
     }
 
-
     fclose(file);
     return role;
+}
+
+int authenticateCustumer(char *username, char *password){
+
+    FILE *file = fopen("custumer.txt", "r");
+
+    if (!file){
+        printf("Error opening the file.\n");
+        return 0;
+    }
+
 
 
 }
 
+//Create administrator
 
-int lastEmployeedID;
-int lastDestinationID;
+void createAdministrator () {
 
-//Fetch the last ID of employee
-void fetchIdEmployee() {
-    FILE *file = fopen("employees.txt", "r");
+    Administrator newAdmnistrator;
 
-    if (file == NULL){
-        printf("Error opening the file.\n");
-        return;
-    }
+    newAdmnistrator.id = 1;
+    newAdmnistrator.role = 1;
 
-    int maxID = 0;
-    char line[100];
+    printf(RED"There is no Admnistrator on the system, we need to create one.\n"RESET);
 
-    while (fgets(line, sizeof(line), file) != NULL){
-        if (strstr(line, "ID:") != NULL){
-            int ID;
-            sscanf(line, "ID: %d", &ID);
-            if (ID > maxID){
-                maxID = ID;
-            }
-        }
-    }
+    printf("Name of administrator: \n");
+    fgets(newAdmnistrator.name, 50, stdin);
+    newAdmnistrator.name[strcspn(newAdmnistrator.name, "\n")] = 0;
+    
+    printf("Password of administrator: \n");
+    fgets(newAdmnistrator.password, 15, stdin);
+    newAdmnistrator.password[strcspn(newAdmnistrator.password, "\n")] = 0;
 
-    fclose(file);
+    FILE *file = fopen("administrator.txt", "a");
 
-    lastEmployeedID = maxID;    
-
-}
-
-//Fetch the last ID of destination
-void fetchIdDestination() {
-    FILE *file = fopen("destination.txt", "r");
-
-    if (file == NULL){
-        printf("Error opening the file.\n");
-        return;
-    }
-
-    int maxID = 0;
-    char line[100];
-
-    while (fgets(line, sizeof(line), file) != NULL){
-        if (strstr(line, "ID:") != NULL){
-            int ID;
-            sscanf(line, "ID: %d", &ID);
-            if (ID > maxID){
-                maxID = ID;
-            }
-        }
-    }
+    fprintf(file, "ID: %d\n", newAdmnistrator.id);
+    fprintf(file, "Name: %s\n", newAdmnistrator.name);
+    fprintf(file, "Password: %s\n", newAdmnistrator.password);
+    fprintf(file, "Role: %d\n", newAdmnistrator.role);
 
     fclose(file);
 
-    lastDestinationID = maxID;    
+    printf(RED"Administrator was created.\n"RESET);
+
+    
 
 }
 
 // Add employee function
-void addEmployee() {
+void createEmployee() {
 
     fetchIdEmployee();
 
@@ -329,7 +375,7 @@ void listEmployee(){
 }
 
 //Add destination function
-void addDestination() {
+void createDestination() {
 
     fetchIdDestination();
 
@@ -567,39 +613,7 @@ void makeReservation () {
     printf("Reservation for destination with ID %d made successfully.\n", idToReserve);
 }   
 
-//Create administrator
 
-void createAdministrator () {
-
-    Administrator newAdmnistrator;
-
-    newAdmnistrator.id = 1;
-    newAdmnistrator.role = 1;
-
-    printf(RED"There is no Admnistrator on the system, we need to create one.\n"RESET);
-
-    printf("Name of administrator: \n");
-    fgets(newAdmnistrator.name, 50, stdin);
-    newAdmnistrator.name[strcspn(newAdmnistrator.name, "\n")] = 0;
-    
-    printf("Password of administrator: \n");
-    fgets(newAdmnistrator.password, 15, stdin);
-    newAdmnistrator.password[strcspn(newAdmnistrator.password, "\n")] = 0;
-
-    FILE *file = fopen("administrator.txt", "a");
-
-    fprintf(file, "ID: %d\n", newAdmnistrator.id);
-    fprintf(file, "Name: %s\n", newAdmnistrator.name);
-    fprintf(file, "Password: %s\n", newAdmnistrator.password);
-    fprintf(file, "Role: %d\n", newAdmnistrator.role);
-
-    fclose(file);
-
-    printf(RED"Administrator was created.\n"RESET);
-
-    
-
-}
 
 int main(void)
 {
@@ -683,7 +697,7 @@ int main(void)
                     //To select the option from Manage Company
                     if (opt_emp == 1){
                         
-                        addEmployee();
+                        createEmployee();
                     }
 
                     else if (opt_emp == 2){
@@ -696,7 +710,7 @@ int main(void)
 
                     else if (opt_emp == 4)
                     {
-                        addDestination();
+                        createDestination();
                     }
 
                     else if (opt_emp == 5)
