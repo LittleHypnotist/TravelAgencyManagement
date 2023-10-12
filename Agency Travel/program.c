@@ -58,6 +58,7 @@ typedef struct
 
 int lastEmployeedID;
 int lastDestinationID;
+int lastCustomerID;
 
 //Fetch the last ID of employee
 void fetchIdEmployee() {
@@ -115,6 +116,37 @@ void fetchIdDestination() {
 
 }
 
+//Fetch the last ID of customers
+void fetchIdCustomer() {
+
+    FILE *file = fopen("customer.txt", "r");
+
+    if (file == NULL)
+    {
+        printf("Error opening the file.\n");
+        return;
+    }
+    
+    int maxID = 0;
+    char line[100];
+
+    while (fgets(line, sizeof(line), file) != NULL){
+        if (strstr(line, "ID:") != NULL)
+        {
+            int ID;
+            sscanf(line, "ID: %d", &ID);
+            if (ID > maxID)
+            {
+                maxID = ID;
+            }
+            
+        }
+        
+    }
+    
+}
+
+//Authentication Administrator
 int authenticateAdministrator(char *username, char *password) {
 
     FILE *file = fopen("administrator.txt", "r");
@@ -152,6 +184,7 @@ int authenticateAdministrator(char *username, char *password) {
     return role; 
 }
 
+//Authentication Employee
 int authenticateEmployee(char *username, char *password){
 
     FILE *file = fopen("employees.txt", "r");
@@ -194,9 +227,10 @@ int authenticateEmployee(char *username, char *password){
     return role;
 }
 
-int authenticateCustumer(char *username, char *password){
+//Authentication Customer
+int authenticateCustomer(char *username, char *password){
 
-    FILE *file = fopen("custumer.txt", "r");
+    FILE *file = fopen("customer.txt", "r");
 
     if (!file){
         printf("Error opening the file.\n");
@@ -370,6 +404,46 @@ void listEmployee(){
 
     printf("Press any key to exit\n");
     scanf(" %c", &anyKey);
+
+
+}
+
+//Add customer function
+void createCustomer() {
+
+    fetchIdCustomer();
+
+    Customer newCustomer;
+
+    newCustomer.id = lastCustomerID + 1;    
+    newCustomer.numBookedTrips = 0;
+    newCustomer.role = 3;
+
+    printf("Name: ");
+    fgets(newCustomer.name, 50, stdin);
+    newCustomer.name[strcspn(newCustomer.name, "\n")] = 0;
+
+    printf("Password: ");
+    fgets(newCustomer.password, 50, stdin);
+    newCustomer.password[strcspn(newCustomer.password, "\n")] = 0;
+
+    FILE *file = fopen("customer.txt", "a");
+
+    if (file == NULL){
+        printf("Error opening the file.\n");
+        return;
+    }
+
+    fprintf(file, "ID: %d\n", newCustomer.id);
+    fprintf(file, "Name: %s\n", newCustomer.name);
+    fprintf(file, "Password: %s\n", newCustomer.password);
+    fprintf(file, "Role: %d\n", newCustomer.role);
+    fprintf(file, "Booked Trips: %d\n", newCustomer.bookedTripIDs);
+    fprintf(file, "Num Booked Trips: %d\n", newCustomer.numBookedTrips);
+
+    fclose(file);
+
+    printf("New destination succesfully added!\n");
 
 
 }
@@ -635,7 +709,7 @@ int main(void)
         printf("Login as: \n");
         printf("1 - Admnistrator\n");
         printf("2 - Employee\n");
-        printf("3 - Custumer\n");
+        printf("3 - Customer\n");
         scanf("%d", &opt_login);
 
         if (opt_login == 1)
@@ -671,7 +745,7 @@ int main(void)
         while (1)
         {
             printf(CYAN"\n-------Home Menu-------\n\n"RESET);
-            printf(GREEN"1 - Manage Company\n"RESET);
+            printf(GREEN"1 - Manage Company\n"RESET);            
             printf(GREEN"2 - Customer service\n"RESET);
             printf(RED"\n0 - Exit\n"RESET);
             printf(YELLOW"Select an option: \n"RESET);
@@ -736,11 +810,11 @@ int main(void)
                 }
             }
 
-            //To select the option Custumer Service
+            //To select the option Customer Service
             else if (opt == 2){
                 while (1)
                 {
-                    printf(CYAN"\n----Custumer Service Menu----\n\n"RESET);
+                    printf(CYAN"\n----Customer Service Menu----\n\n"RESET);
                     printf("1 - Check available destination\n");
                     printf("2 - Make a reservation\n");
                     printf("3 - Cancel reservations\n");
@@ -749,7 +823,7 @@ int main(void)
                     scanf("%d", &opt_cust);
                     getchar();
 
-                    //To select the option from Custumer Service
+                    //To select the option from Customer Service
                     if (opt_cust == 1)
                     {
                         availableDestination();
