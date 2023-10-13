@@ -848,6 +848,41 @@ void employeeMenu() {
     }
 }
 
+void custumerMenu() {
+
+    int opt_cust;
+
+    while (1)
+    {
+        printf(CYAN"\n----Customer Service Menu----\n\n"RESET);
+        printf("1 - Check available destination\n");
+        printf("2 - Make a reservation\n");
+        printf("3 - Cancel reservations\n");
+        printf("0 - Exit\n");
+        printf("Select an option: ");
+        scanf("%d", &opt_cust);
+        getchar();  
+
+        switch (opt_cust)
+        {
+        case 1:
+            availableDestination();
+            break;
+        
+        case 2:
+            makeReservation();
+            break;
+
+        case 3:
+            cancelReservation();   
+            break;
+        }
+              
+    }
+                                                  
+
+}
+
 int main(void)
 {
     //variables that are use to choose the options
@@ -902,7 +937,16 @@ int main(void)
 
         else if (opt_login == 3)
         {
-            /* code */
+            /*
+            char username[50];
+            char password[15];
+
+            role = authenticateCustumer(username, password);
+
+            if (role == 3){
+                custumerMenu(); 
+            }
+             */
         }
                 
         
